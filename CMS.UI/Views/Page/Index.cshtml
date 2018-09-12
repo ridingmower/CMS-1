@@ -1,0 +1,25 @@
+﻿@using CMS.Common.Models.PageContent
+@model IEnumerable<ContentDto>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+<div>
+    @Html.Action("Index", "Menu")
+</div>
+
+<div>
+    @foreach (var item in Model)
+    {
+        <div class="@item.Size bg-white margin-bottom-10">@Html.Raw(item.Content)</div>
+
+    }
+</div>
+
+
+
+
+

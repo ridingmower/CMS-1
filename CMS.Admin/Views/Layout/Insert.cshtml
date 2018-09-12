@@ -1,0 +1,175 @@
+﻿@model CMS.Common.Models.Layout.LayoutDto
+
+@{
+    ViewBag.Title = "Insert";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+
+}
+<script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
+<h1 class="page-title">
+    Admin Dashboard
+    <small>statistics, charts, recent events and reports</small>
+</h1>
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Select Columns</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label for="sel1">Select one:</label>
+                    
+                    <div class="row">
+                        <div class="col-md-6">
+                            <select id="types" class="form-control"></select>
+                        </div>
+                        <div class="col-md-6">
+                            <select id="sizes" class="form-control"></select>
+                        </div>
+                    </div>
+
+</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="submit" onclick="getColumnType()" class="btn btn-primary" id="Create">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="portlet light portlet-fit bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-directions font-green hide"></i>
+                    <span class="caption-subject bold font-dark uppercase "> New Layout</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="form-body">
+
+                    <form id="frmNewLayout" action="/Layout/InsertNew" method="post">
+                        <input type="hidden" name="Id" value="@Model.Id" />
+                        <div class="form-group form-md-line-input">
+                            <input type="text" name="Name" class="form-control" id="form_control_1" placeholder="Enter layout name" value="@Model.Name">
+                            <label for="form_control_1">Layout Name</label>
+                        </div>
+                        <div class="row">
+                            @*<button class="btn btn-primary pull-right" onclick="newLayoutItem(); return false;" data-toggle="modal" data-target="#exampleModal"> Add New Editor</button>*@
+                            <button type="button" class="btn btn-primary pull-right" data-toggle="modal" onclick="newLayoutItem()" data-target="#exampleModal">
+                                Add Content
+                            </button>
+                        </div>
+                        <div id="dtlLayoutItem" class="row padding-tb-15">
+
+
+                        </div>
+                        <div id="dtlLayoutItemTest" class="row padding-tb-15">
+
+
+                        </div>
+
+                        <div id="dtlLayoutItemSize" class="row padding-tb-15">
+
+
+                        </div>
+
+                        <div class="form-actions noborder">
+                            <button class="btn btn-danger" onclick="location.href = '/Layout/List'; return false;">Cancel</button>
+                            
+                            <button class="btn btn-lg green pull-right" type="submit" @*onclick="addNewLayout();"*@>Add<i class="fa fa-plus"></i></button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+
+    <script>
+        $(function () {
+            getItems()
+        });
+        function getItems() {
+            $('#dtlLayoutItem').load('/Layout/GetLayoutItems', {}, function (response) {
+
+            });
+        }
+
+        function getSize() {
+            $('#dtlLayoutItemSize').load('/Layout/GetLayoutItems', {}, function (response) {
+                var values = [];
+                $("input[name='Liste[]']").each(function () {
+                    values.push($(this).val());
+
+                });
+                
+            });
+        }
+
+        function getColumnType() {
+            var kolon = $("#types option:selected").text();
+            var size = $("#sizes option:selected").text();
+            
+
+            $("#dtlLayoutItemTest").append(
+                '<div id="colonWith" class="' + kolon +'-'+size+ '"><div class="input-group"><input type="text" name="Liste[]" class="form-control" readonly value="' + kolon +'-'+size+ '"><span class="input-group-btn"><button id="buttonSil" class="btn btn-danger" type="button"><i class="fa fa-trash"></i></button></span></div></div>');
+            $("#dtlLayoutItemTest").on("click", "#buttonSil",
+                function (e) {
+                    e.preventDefault;
+                    $(this).parent().parent().parent().remove();
+                }); ("#dtlLayoutItemTest")
+
+        }
+
+        
+        function newLayoutItem() {
+            $('#types').empty();
+            
+                $.ajax({
+                    type: "Post",
+                    url: "/Layout/GetSize",
+                    dataType: 'json',
+                    success: function (data) {
+                        for (var i = 0; i < data.length; i++) {
+                            $('#types').append('<option id=type value=' + data[i].Name + '>' + data[i].Value + '</option > ');
+                        }
+                    }
+            });
+
+            var str = null;
+            for (var i = 1; i < 13; i++) {
+
+                str += "<option value='" + i + "'>" + i + "</option>";
+            }
+            $("#sizes").append(str);
+            }
+         
+        //function addNewLayout() {
+            
+        //    var data = $('#frmNewLayout').serialize();
+        //    $.post('/Layout/InsertNew', data, function (response) {
+        //        if (response.IsSuccess) {
+        //            setTimeout(function () {
+        //                location.href = '/Layout/List';
+        //            }, 1000);
+        //        } else {
+        //            //Todo: pop warning
+        //        }
+        //    })
+        //}
+    </script>
+}

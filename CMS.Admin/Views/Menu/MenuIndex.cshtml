@@ -1,0 +1,221 @@
+﻿@model IEnumerable<CMS.Domain.Domains.Page>
+
+@{
+    ViewBag.Title = "MenuIndex";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<div class="col-md-6">
+    <!-- BEGIN SAMPLE TABLE PORTLET-->
+    <div class="portlet">
+
+        <div class="portlet-body">
+            <div class="table-scrollable">
+                <table class="table table-striped table-bordered table-advance table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                <i class="fa fa-briefcase"></i> Page
+                            </th>
+                            <th class="hidden-xs">
+                                <i class="fa fa-user"></i> Slug
+                            </th>
+                            <th class="hidden-xs">
+                                <i class="fa fa-plus"></i> Add
+                            </th>
+
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="highlight">
+                                    <div class="success"></div>
+                                    <a href="javascript:;"> @item.PageName </a>
+                                </td>
+                                <td class="hidden-xs"> @item.Slug </td>
+                                <td>
+                                    <a href="javascript:;" onclick="CreateMenu(@item.Id)" class="btn btn-outline btn-circle btn-sm purple">
+                                        <i class="fa fa-plus-circle">Add</i>
+                                    </a>
+
+                                    <button class="btn btn-outline btn-circle btn-sm yellow center-body" type="button" id="itembuton" onclick="MenuList()" data-id="@item.Id" data-toggle="modal" href="#draggable">
+                                        <i class="fa fa-plus-circle">Add Sub</i>
+                                    </button>
+
+                                    <button @*onclick="ChangeMenuName(@item.Id)"*@ id="demo_4" value="@item.Id" data-toggle="modal" href="#dialog" class="btn btn-outline btn-circle btn-sm green-dark pull-right">
+                                        <i class="fa fa-plus-circle">Change Name</i>
+                                    </button>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- END SAMPLE TABLE PORTLET-->
+</div>
+<div class="col-md-6 pull-right">
+    @Html.Action("MenuView")
+</div>
+@*<div class="col-md-4">
+        @Html.Action("MenuList")
+    </div>*@
+
+
+
+
+<div class="bootbox modal fade bootbox-prompt in" tabindex="-1" role="dialog" style="" id="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="bootbox-close-button close" data-dismiss="modal" aria-hidden="true">×</button>
+                <h4 class="modal-title">Please enter menu name</h4>
+            </div>
+            <form class="bootbox-form" action="/Menu/UpdateMenuName" method="post">
+                <div class="modal-body">
+                    <div class="bootbox-body">
+                        <input type="hidden" value="" id="menuid" name="id"/>
+                        <input class="bootbox-input bootbox-input-text form-control" autocomplete="off" type="text" name="Name">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button data-bb-handler="cancel" type="button" class="btn btn-default">Cancel</button>
+                    <button data-bb-handler="confirm"  type="submit" class="btn btn-primary">Change</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+
+
+
+<div class="modal fade draggable-modal ui-draggable in" id="draggable" tabindex="-1" role="basic" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <form class="form-horizontal">
+                <div class="modal-header ui-draggable-handle">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">Select SubMenu</h4>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" name="subpageid" id="subpageid" />
+                    <div class="form-group">
+                        <label class="control-label col-md-4">Page</label>
+                        <div class="col-md-8">
+                            <select class="form-control select2 select2-hidden-accessible" id="pageid" name="pageid" tabindex="-1" aria-hidden="true">
+                                @foreach (var item in Model)
+                                {
+
+
+                                }
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn green" onclick="SetSubmenu()">Save changes</button>
+                </div>
+            </form>
+        </div>
+        <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+</div>
+@section scripts{
+
+
+    <script>
+
+        function MenuList() {
+            $('.select2').empty();
+
+            $.ajax({
+                type: "Post",
+                url: "/Menu/GetMenuList",
+                dataType: 'json',
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $('.select2').append('<option id=type value=' + data[i].PageId + '>' + data[i].MenuName + '</option > ');
+                    }
+                }
+            });
+        }
+        $(document).on("click", "#itembuton", function () {
+            var UserName = $(this).data('id');
+            $(".modal-body #subpageid").val(UserName);
+        });
+
+        $(document).on("click", "#demo_4", function () {
+            var id = $("#demo_4").val();
+            alert(id);
+            $(".modal-body #menuid").val(id);
+        });
+
+
+        function SetSubmenu() {
+            var subpageid = $("#subpageid").val();
+            var pageid = $("#pageid option:selected").val();
+
+            $.post("/Menu/CreateSubMenu",
+                {
+                    pageid: pageid,
+                    subpageid: subpageid,
+                },
+                function (data, status) {
+                    alert("Successfull");
+                    location.reload();
+                });
+            location.reload();
+        }
+
+        function CreateMenu(id) {
+            var pageid = id;
+            $.post("/Menu/CreateMenu", {
+                id: pageid
+            },
+                function (data, status) {
+                    alert("Successfull");
+                    location.reload();
+                });
+            location.reload();
+        }
+
+        function ChangeMenuName(id) {
+            var pageid = id;
+            $.post("/Menu/UpdateMenuName", {
+                id: pageid
+            },
+                function (data, status) {
+                    alert("Successfull");
+                    location.reload();
+                });
+            location.reload();
+        }
+
+
+        function RemoveMenu(id) {
+            var pageid = id;
+            $.post("/Menu/RemoveMenu", {
+                id: pageid
+            },
+                function (data, status) {
+                    alert("Successfull");
+                    location.reload();
+                });
+
+        }
+
+    </script>
+}

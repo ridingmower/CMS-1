@@ -1,0 +1,45 @@
+﻿
+@using CMS.Common.Models.PageContent
+
+@model List<ContentDto>
+
+
+<script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
+<form action="/PageContent/UpdateContent" method="post">
+    <div class="container" id="updateform">
+
+
+        @foreach (var item in Model)
+        {
+
+
+            <div class="@item.Size" id="@item.DivId">
+                <br />
+                @if (item.Content == null)
+                {
+                    <textarea id="txt_@item.DivId" name="deger[]">null</textarea>
+                }
+                <textarea id="txt_@item.DivId" name="deger[]">@item.Content</textarea>
+                <textarea style="display:none;" name="order[]">@item.DivId</textarea>
+            </div>
+
+            <script>
+           
+        ClassicEditor
+            .create(document.querySelector('#txt_' +@item.DivId), {
+
+            })
+            .catch(error => {
+                console.error(error.stack);
+                });
+            </script>
+            
+        }
+        <br />
+    </div>
+        <div class="container-fluid">
+            <br />
+            <button type="submit" class="btn btn-circle btn-info">Edit Context</button>
+        </div>
+
+    </form>

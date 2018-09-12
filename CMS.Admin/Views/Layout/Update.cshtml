@@ -1,0 +1,177 @@
+﻿@model CMS.Common.Models.Layout.LayoutDto
+@{
+    ViewBag.Title = "Update";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+
+<p class="mb-0"><h2>@Model.Name Update</h2></p>
+
+
+<!-- Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Select Columns</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="value" />
+                <label for="sel1">Select one:</label>
+                <div class="row">
+                    <div class="col-md-6">
+                        <select id="types" class="form-control"></select>
+                    </div>
+                    <div class="col-md-6">
+                        <select id="sizes" class="form-control"></select>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" onclick="addNewLayout()" class="btn btn-primary" id="Create">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="row">
+
+    <div class="col-lg-12">
+        <div class="portlet light portlet-fit bordered">
+            <div class="portlet-title">
+                <div class="caption">
+                    <i class="icon-directions font-green hide"></i>
+                    <span class="caption-subject bold font-dark uppercase "> New Layout</span>
+                </div>
+            </div>
+            <div class="portlet-body">
+                <div class="form-body">
+                    <form id="frmNewLayout" action="/Layout/UpdateSize/@Model.Id" method="post">
+                        <input type="hidden" name="Id" value="@Model.Id" />
+                        <div class="form-group form-md-line-input">
+                            <input type="text" name="Name" class="form-control" id="form_control_1" placeholder="Enter layout name" value="@Model.Name">
+                            <label for="form_control_1">Layout Name</label>
+                        </div>
+                        @foreach (var item in Model.Items)
+                        {
+                            <div class="row ">
+                                <div class="col-md-4 pull-right">@item.Order. Item</div>
+                                <div class="col-md-8">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" name="newSize" id="item_@item.Order" value="@item.SizeValue" readonly>
+                                        <input type="hidden" name="Order[]" value="@item.Order" />
+                                        <span class="input-group-btn">
+                                            <button class="btn btn-icon-only blue" type="button" id="itembuton" value="@item.Order" data-toggle="modal" data-id="@item.Order" onclick="getColumnType(@item.Order)" data-target="#exampleModal"><i class="fa fa-edit"></i></button>
+                                            <button class="btn btn-icon-only red" type="button"  id="itemremove" onclick="RemoveItem(@item.Id,@item.Order)"><i class="fa fa-times"></i></button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <br />
+                        }
+
+
+                        <div class="form-actions noborder">
+
+                            <button class="btn btn-outline red-mint uppercase" onclick="location.href = '/Layout/List';" data-toggle="confirmation" data-placement="top" data-original-title="" title="" aria-describedby="confirmation31183">Cancel</button>
+
+
+                            <button class="btn btn-primary pull-right" type="submit" @*onclick="addNewLayout()"*@>Add</button>
+                        </div>
+
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+@section scripts{
+
+
+    <script>
+        $(document).on("click", "#itembuton", function () {
+            var UserName = $(this).data('id');
+            $(".modal-body #value").val(UserName);
+        });
+
+        function getSize() {
+            $('#dtlLayoutItemSize').load('/Layout/GetLayoutItems', {}, function (response) {
+                var values = [];
+                $("input[name='Liste[]']").each(function () {
+                    values.push($(this).val());
+
+                });
+
+            });
+        }
+
+        function getColumnType(itemid) {
+            $('#types').empty();
+            $('#sizes').empty();
+            var kolon = $("#types option:selected").text();
+            var size = $("#sizes option:selected").text();
+            var item = itemid;
+
+            $.ajax({
+                type: "Post",
+                url: "/Layout/GetSize",
+                dataType: 'json',
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        $('#types').append('<option id=type value=' + data[i].Name + '>' + data[i].Value + '</option > ');
+                    }
+                }
+            });
+
+            var str = null;
+            for (var i = 1; i < 13; i++) {
+
+                str += "<option value='" + i + "'>" + i + "</option>";
+            }
+            $("#sizes").append(str);
+
+
+        }
+
+        function addNewLayout() {
+            var kolon = $("#types option:selected").text();
+            var size = $("#sizes option:selected").text();
+            var itemid = $("#value").val();
+            $("#item_" + itemid).val(kolon + "-" + size);
+            alert(itemid);
+            var data = $('#frmNewLayout').serialize();
+            $.post('/Layout/Update', data, function (response) {
+                if (response.IsSuccess) {
+                    setTimeout(function () {
+                        location.href = '/Layout/List';
+                    }, 1000);
+                } else {
+                    //Todo: pop warning
+                }
+            })
+        }
+
+        function RemoveItem(id,itemorder) {
+            
+            var itemid = id;
+            var order = itemorder;
+            alert(order);
+            $.post("/Layout/RemoveItem",
+                {
+                    Id: itemid,
+                    Order: order,
+                },
+                function (data, status) {
+                   
+                });
+        }
+
+
+    </script>
+}

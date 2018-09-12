@@ -1,0 +1,161 @@
+﻿/*few resets */
+body, html, ul, li, a {
+    margin: 0;
+    padding: 0;
+}
+
+nav ul li {
+    list-style-type: none;
+}
+
+    nav ul li a {
+        font-family: helvetica;
+        text-decoration: none;
+    }
+
+nav {
+    margin: 50px 50px;
+    background: #993039;
+    padding-top: 3px;
+    border-radius: 3px;
+}
+
+    /* styling main topbar */
+    nav > ul {
+        height: 2.6em;
+        background: #c0392b;
+        border-radius: 3px;
+    }
+        /* important to keep submenu at their position */
+        nav > ul li {
+            position: relative;
+        }
+        /*styling topbar navigation items */
+        nav > ul > li {
+            float: left;
+            border-right: 1px solid #ac3326;
+            height: 100%;
+            line-height: 2.6em;
+            position: relative;
+        }
+
+            nav > ul > li:hover {
+                background: #ac3326;
+                transition: .3s background ease-in-out;
+            }
+
+
+
+
+            /* applying style to topbar items */
+            nav > ul > li > a {
+                padding: 0 1.6em;
+            }
+
+            nav > ul > li a {
+                display: block;
+                color: #ecf0f1;
+            }
+
+            nav > ul > li:first-child:hover {
+                border-top-left-radius: 3px;
+                border-bottom-left-radius: 3px;
+            }
+
+            nav > ul > li > ul > li:last-child:hover,
+            nav > ul > li > ul > li > ul > li:last-child:hover,
+            nav > ul > li > ul > li > ul > li > ul > li:last-child:hover {
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+            }
+
+            nav > ul > li > ul, nav > ul > li > ul > li > ul, nav > ul > li > ul > li > ul > li > ul {
+                position: absolute;
+                left: -9999px;
+                white-space: nowrap;
+                background: #1abc9c;
+                border-bottom-left-radius: 3px;
+                border-bottom-right-radius: 3px;
+                transition: .3s left ease-in-out;
+            }
+
+
+
+
+                /* padding for each submenu lists */
+                nav > ul > li > ul > li, nav > ul > li > ul > li > ul > li,
+                nav > ul > li > ul > li > ul > li > ul > li {
+                    padding: 0 1em;
+                }
+                    /* applying different colors for submenu */
+                    nav > ul > li > ul > li > ul {
+                        background: #3498db;
+                    }
+
+                        nav > ul > li > ul > li > ul > li > ul {
+                            background: #9b59b6;
+                        }
+                    /* styling the links with different after highlighting */
+                    nav > ul > li > ul > li:hover {
+                        background: #f1c40f;
+                        transition: .3s all ease-in-out;
+                        transition: background,box-shadow .2s ease-in-out, .3s ease-in;
+                        box-shadow: 0 3px #f39c12;
+                    }
+
+                    nav > ul > li > ul > li > ul > li:hover {
+                        background: #e67e22;
+                        transition: .3s all ease-in-out;
+                        transition: background,box-shadow .2s ease-in-out, .3s ease-in;
+                        box-shadow: 0 3px #d35400;
+                    }
+
+                    nav > ul > li > ul > li > ul > li > ul > li:hover {
+                        background: #e74c3c;
+                        transition: background,box-shadow .2s ease-in-out, .3s ease-in;
+                        box-shadow: 0 3px #c0392b;
+                    }
+
+
+            /* revealing first level submenu */
+            nav > ul > li:hover > ul {
+                left: 0;
+                top: 40;
+                transition: .3s left ease-in-out;
+            }
+            /* revealing second level submenu */
+            nav > ul > li > ul > li:hover > ul {
+                left: 100%;
+                top: 0;
+                transition: .3s left ease-in-out;
+            }
+            /* revealing third submenu */
+            nav > ul > li > ul > li > ul > li:hover > ul {
+                left: 100%;
+                top: 0%;
+                transition: .3s left ease-in-out;
+            }
+/* positioning the angle arrows towards right inside submenu*/
+.position-expand-arrow {
+    position: absolute !important;
+    right: 1em !important;
+    line-height: 2.6em !important;
+}
+/* Clearing floats */
+nav ul::after, nav ul::before {
+    content: "";
+    display: table;
+}
+
+nav ul::after {
+    clear: both;
+}
+
+
+article {
+    text-align: center;
+}
+
+    article a {
+        text-decoration: none;
+    }

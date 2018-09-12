@@ -1,0 +1,19 @@
+﻿@using CMS.Domain.Domains
+@model IEnumerable<PLItem>
+
+@*@if (Model==null)
+{
+    <div class="mt-element-ribbon bg-grey-steel">
+        <div class="ribbon ribbon-color-warning uppercase">
+            Uyarı
+        </div>
+        <p class="ribbon-content">Bu layout için her hangi bir bileşen eklanmemiş.</p>
+    </div>
+}
+
+@foreach (var item in Model)
+{
+    <div style="background-color:red;height:200px" class="@item.SizeValue">
+        Update
+    </div>
+}*@

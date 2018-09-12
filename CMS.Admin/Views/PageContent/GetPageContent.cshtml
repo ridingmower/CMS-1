@@ -1,0 +1,70 @@
+﻿
+@model List<CMS.Domain.Domains.Page>
+@{
+    ViewBag.Title = "Page Content";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Page</h2>
+<script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
+@using (Html.BeginForm())
+{
+    <select class="form-control custom-select d-block w-100" id="pageid" required="" onchange="getLayout(this)">
+        <option value="">--Select Content--</option>
+        @{
+            foreach (var item in Model)
+            {
+                <option value="@item.Id">@item.PageName</option>
+
+            }
+        }
+    </select>
+    <br />
+    <a class=" btn dark btn-outline sbold" data-toggle="modal" href="#full"> View Demo </a>
+    <div class="modal fade in" id="full" tabindex="-1" role="dialog" aria-hidden="true" style="padding-right: 17px;">
+        <div class="modal-dialog modal-full">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true"></button>
+                    <h4 class="modal-title">Modal Title</h4>
+                </div>
+                <div class="modal-body" id="content">
+                </div>
+                <br />
+                <div class="modal-footer">
+                    <button type="button" class="btn dark btn-outline pull-right" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+            <!-- /.modal-content -->
+        </div>
+        <!-- /.modal-dialog -->
+    </div>
+
+
+
+
+}
+
+<script>
+
+    function getLayout(selectObject) {
+
+        var valuee = $("#pageid").val();
+        
+        if (valuee != null) {
+            console.log(valuee);
+            $.ajax({
+                type: "Post",
+                url: "/PageContent/ShowPageContent",
+                data: { "id": valuee }
+            }).done(function (data) {
+                $("#content").html(data);
+                console.log(valuee);
+                $("#content").append("<input value='" + valuee + "' name='layoutId' type='hidden'\>")
+            }).fail(function () {
+                alert("Error!!!")
+            })
+        }
+    }
+
+</script>

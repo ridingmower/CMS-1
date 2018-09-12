@@ -1,0 +1,63 @@
+﻿
+@model List<CMS.Domain.Domains.Page>
+@{
+    ViewBag.Title = "Page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h2>Page</h2>
+
+<script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
+@using (Html.BeginForm())
+{
+    <select class="form-control custom-select d-block w-100" id="pageid" required="" onchange="getLayout(this)">
+        <option value="">--Select Page--</option>
+        @{
+            foreach (var item in Model)
+            {
+                <option value="@item.Id">@item.PageName</option>
+
+            }
+        }
+    </select>
+    <br />
+    <div class="row" id="content">
+
+
+    </div>
+    
+}
+
+
+
+
+<script>
+
+
+
+    function getLayout(selectObject) {
+
+        var valuee = $("#pageid").val();
+
+        if (valuee != null) {
+            console.log(valuee);
+            $.ajax({
+                type: "Post",
+                url: "/PageContent/GetPageByIdList",
+                data: { "id": valuee }
+            }).done(function (data) {
+                $("#content").html(data);
+                console.log(valuee);
+                $("#content").append("<input value='" + valuee + "' name='layoutId' type='hidden'\>")
+            }).fail(function () {
+                alert("Error!!!")
+            })
+        }
+    }
+
+
+
+</script>
+
+
+

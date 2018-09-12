@@ -1,0 +1,90 @@
+﻿@*@model IEnumerable<CMS.Common.Models.Menu.MenuDto>*@
+
+@model IEnumerable<CMS.Domain.Domains.Menu>
+<div class="portlet light bordered margin-top-10">
+    <div class="portlet-title">
+        <div class="caption">
+            <i class="icon-bubble font-green"></i>
+            <span class="caption-subject font-green sbold uppercase">Menu List</span>
+        </div>
+    </div>
+    <div class="portlet-body">
+        <div class="dd" id="nestable_list_3">
+            <ol class="dd-list">
+
+                @foreach (var item in Model)
+                {
+                    if (item.ParentId == null)
+                    {
+                        <li class="nav-item open">
+
+                            <a href="javascript:;" class="nav-link nav-toggle">
+                                <i class="icon-folder"></i>
+                                <span class="title">
+                                    @item.Page.PageName
+                                    <i class="btn-circle btn-sm red-flamingo"></i>
+                                </span>
+                                <span class="arrow open"></span>
+                            </a>
+
+                            @foreach (var item1 in Model)
+                            {
+                                if (item1.ParentId == item.Id)
+                                {
+                                    <ul class="sub-menu">
+                                        <li class="nav-item">
+                                            <a href="javascript:;" class="nav-link nav-toggle">
+                                                <i class="icon-settings"></i> @item1.MenuName
+                                                <span class="arrow"></span>
+                                            </a>
+                                            @foreach (var item2 in Model)
+                                            {
+                                                if (item2.ParentId == item1.Id)
+                                                {
+                                                    <ul class="sub-menu">
+                                                        <li class="nav-item">
+                                                            <a href="javascript:;" class="nav-link nav-toggle">
+                                                                <i class="icon-settings"></i> @item2.MenuName
+                                                                <span class="arrow"></span>
+                                                            </a>
+                                                        </li>
+                                                    </ul>
+                                                }
+                                            }
+                                        </li>
+                                    </ul>
+
+                                }
+                            }
+
+                        </li>
+                    }
+                }
+
+            </ol>
+        </div>
+    </div>
+</div>
+
+
+<script>
+
+    function MenuList() {
+        $('.select2').empty();
+
+        $.ajax({
+            type: "Post",
+            url: "/Menu/GetMenuList",
+            dataType: 'json',
+            success: function (data) {
+                for (var i = 0; i < data.length; i++) {
+                    $('.select2').append('<option id=type value=' + data[i].PageId + '>' + data[i].MenuName + '</option > ');
+                }
+            }
+        });
+    }
+
+    var id = $("#itemid").val();
+    alert(id);
+
+</script>

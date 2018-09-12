@@ -1,0 +1,70 @@
+﻿@model List<CMS.Domain.Domains.PageLayout>
+@{
+    ViewBag.Title = "Page";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2>Page</h2>
+<script src="https://cdn.ckeditor.com/ckeditor5/11.0.1/classic/ckeditor.js"></script>
+@using (Html.BeginForm())
+{
+    <select class="form-control custom-select d-block w-100"  id="columns" required="" onchange="getLayout(this)">
+        <option value="">--Select Page Layout--</option>
+        @{
+            foreach (var item in Model)
+            {
+                <option value="@item.Id">@item.Name</option>
+            }
+        }
+    </select>
+    <br />
+    <input type="text" class="form-control" name="pagename" id="pagename" on placeholder="Page Name">
+    <div class="row" id="content">
+    </div>
+    <br />
+    <button type="submit" name="CreatePage" onclick="getName()" class="btn btn-circle btn-info">Create Page</button>
+}
+
+
+
+<script>
+
+    //function getLayout(selectObject) {
+
+    //    var valuee = $("#columns").val();
+    //    alert(valuee);
+    //    if (valuee != null) {
+    //        console.log(valuee);
+    //        $.ajax({
+    //            type: "Post",
+    //            url: "/Layout/GetLayoutById",
+    //            data: { "id": valuee }
+    //        }).done(function (data) {
+    //            $("#content").html(data);
+    //            console.log(valuee);
+    //            $("#content").append("<input value='" + valuee + "' name='layoutId' type='hidden'\>")
+    //        }).fail(function () {
+    //            alert("Error!!!")
+    //            })
+            
+    //    }
+
+        
+    //}
+    function getName() {
+        var valuee = $("#columns").val();
+        var pagename = $("#pagename").val();
+        alert(valuee);
+        alert(pagename);
+    
+        $.ajax({
+            type: "Post",
+            url: "/Page/CreatePage",
+            data: { "name": pagename, "id": valuee }
+        })
+    }
+
+
+
+    </script>
+
+

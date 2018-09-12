@@ -1,0 +1,29 @@
+﻿@model List<CMS.Common.Models.PageContent.ContentDto>
+@{
+    /**/
+
+    ViewBag.Title = "Show";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+
+@{ var total = 0;
+    foreach (var item in Model)
+    {
+
+        string[] infos = item.Size.Split('-');
+
+        total += int.Parse(infos[2]);
+
+
+        <div class="@item.Size">@Html.Raw(item.Content)</div>
+
+        if (total == 12)
+        {
+            total = 0;
+
+            <div class="clearfix"></div>
+        }
+    }
+}

@@ -1,0 +1,99 @@
+﻿@model List<CMS.Domain.Domains.Page>
+@{
+    /**/
+
+    ViewBag.Title = "EditPage";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<div class="col-md-12 center-body">
+    <!-- BEGIN SAMPLE TABLE PORTLET-->
+    <div class="portlet">
+        <div class="portlet-title">
+            <div class="caption">
+                <i class="fa fa-bell-o"></i>Advance Table
+            </div>
+            <div class="tools">
+                <a href="javascript:;" class="collapse" data-original-title="" title=""> </a>
+                <a href="#portlet-config" data-toggle="modal" class="config" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="reload" data-original-title="" title=""> </a>
+                <a href="javascript:;" class="remove" data-original-title="" title=""> </a>
+            </div>
+        </div>
+        <div class="portlet-body">
+            <div class="table-scrollable">
+                <table class="table table-striped table-bordered table-advance table-hover">
+                    <thead>
+                        <tr>
+                            <th>
+                                <i class="fa fa-briefcase"></i> Page Name
+                            </th>
+                           
+                            <th>
+                                <i class="fa fa-shopping-cart"></i> Update
+                            </th>
+                            <th>
+                                <i class="fa fa-shopping-cart"></i> Publish
+                            </th>
+                            <th> </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                        <tr>
+                            <td class="highlight">
+                                <div class="success"></div>
+                                <a href="javascript:;">@item.PageName </a>
+                            </td>
+                            
+                            <td>
+                                <a href="javascript:;" class="btn btn-outline btn-circle btn-sm purple" onclick="getPageContent(@item.Id)">
+                                    <i class="fa fa-edit"></i> Edit
+                                </a>
+                            </td>
+
+                            <td>
+                                <a href="javascript:;" class="btn btn-outline btn-circle btn-sm purple" onclick="update(@item.Id)">
+                                    <i class="fa fa-edit"></i> Update Publish
+                                </a>
+                            </td>
+                        </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <!-- END SAMPLE TABLE PORTLET-->
+
+</div>
+<div id="content">
+
+</div>
+
+<script>
+
+    function getPageContent(id) {
+
+        var valuee = id;
+        
+        if (valuee != null) {
+            console.log(valuee);
+            $.ajax({
+                type: "Post",
+                url: "/PageContent/EditPageContent",
+                data: { "id": valuee }
+            }).done(function (data) {
+                $("#content").html(data);
+                console.log(valuee);
+                $("#updateform").append("<input value='" + valuee + "' name='pageid' type='hidden'\>")
+            }).fail(function () {
+                alert("Error!!!")
+            })
+        }
+    }
+
+
+
+
+</script>

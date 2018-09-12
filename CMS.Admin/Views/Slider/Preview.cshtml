@@ -1,0 +1,58 @@
+﻿@model IEnumerable<CMS.Domain.Domains.Slider>
+@{
+    ViewBag.Title = "Preview";
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<link href="~/Content/slider.css" rel="stylesheet" />
+<h1>Slider </h1>
+<!-- ====================================
+Contenedor Slider
+=======================================-->
+
+
+<!-- Imagenes Copyright -->
+
+
+<!-- Fork me on GitHub ribbon -->
+
+<!-- Header -->
+
+<!-- Slider -->
+<div id="slider">
+    <div class="slides">
+        
+        @foreach (var item in Model)
+        {
+            <div class="slider">
+                <div class="legend"></div>
+                <div class="content">
+                    <div class="content-txt">
+                        <h1>@item.Title</h1>
+                        </div>
+                </div>
+                <div class="image">
+                    <img src="~/SliderImage/@item.ImageUrl" title="" alt="@item.Title">
+                </div>
+            </div>
+
+        }
+        </div>
+    <div class="switch">
+        <ul>
+            @foreach (var item in Model)
+            {
+                <li>
+                    
+                </li>
+                
+            }
+            
+
+        </ul>
+    </div>
+</div>
+
+
+
+<script src="~/Scripts/slider.js"></script>

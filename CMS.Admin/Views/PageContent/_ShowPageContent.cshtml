@@ -1,0 +1,9 @@
+﻿@using CMS.Common.Models.PageContent
+@model IEnumerable<ContentDto>
+
+
+@foreach (var item in Model)
+{
+    <div class="@item.Size bg-white margin-bottom-10">@Html.Raw(item.Content)</div>
+    
+}
